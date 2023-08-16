@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- daisy ui and tailwind cdn -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.5.1/dist/full.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>stopwatch</title>
+</head>
+<body class="flex flex-col justify-center items-center gap-5 md:gap-10 my-5 md:my-10">
+<div class="bg-black text-white text-5xl md:text-7xl md:px-10 p-5 rounded-2xl shadow-lg shadow-gray-700 font-medium">
+    <h1 id="timerDisplay" class="w-[250px] md:w-[370px]">00:00:00:00</h1>
+</div>
+<div class="flex justify-center items-center gap-5 md:gap-10">
+    <button id="btnStop" class="btn btn-outline btn-error">Stop</button>
+    <button id="btnStart" class="btn btn-outline btn-success">Start</button>
+    <button id="btnReset" class="btn btn-outline btn-info">Reset</button>
+</div>
+<div class="overflow-x-auto">
+    <table class="table border-2 border-gray-600">
+      <!-- head -->
+      <thead>
+        <tr>
+          <th>Hours</th>
+          <th>Minutes</th>
+          <th>Seconds</th>
+          <th>Milliseconds</th>
+        </tr>
+      </thead>
+      <tbody id="result">
+      </tbody>
+    </table>
+  </div>
+
+<script>
+    const timerDisplay = document.getElementById('timerDisplay');
+    const btnStop = document.getElementById('btnStop');
+    const btnStart = document.getElementById('btnStart');
+    const btnReset = document.getElementById('btnReset');
+    
+    let msecString, secsString, minsString, hrsString;
+    let msec =  secs =  mins =  hrs = 0;
+    let timerId = null;
+
+    btnStart.addEventListener('click', function(){
+        if(timerId !== null){
+            clearInterval(timerId);
+        }
+        timerId = setInterval(setTimer,10);
+    });
+
+    btnStop.addEventListener('click', function(){
+        clearInterval(timerId);
+
+        if(timerId !== null){
+            const result = document.getElementById('result');
+            const tr = document.createElement('tr');
+            const Hours = document.createElement('th');
+            const Minutes = document.createElement('th');
+            const Seconds = document.createElement('th');
+            const Milliseconds = document.createElement('th');
+    
+            Hours.innerText = hrsString;
+            Minutes.innerText = minsString;
+            Seconds.innerText = secsString;
+            Milliseconds.innerText = msecString;
+            tr.appendChild(Hours);
+            tr.appendChild(Minutes);
+            tr.appendChild(Seconds);
+            tr.appendChild(Milliseconds);
+            result.appendChild(tr)
+        }
+    });
+
+    btnReset.addEventListener('click', function(){
+        clearInterval(timerId);
+        timerDisplay.innerHTML = `00:00:00:00`;
+        msec = secs = mins = hrs = 0;
+
+        if(timerId !== null){
+            const result = document.getElementById('result');
+            const tr = document.createElement('tr');
+            const Hours = document.createElement('th');
+            const Minutes = document.createElement('th');
+            const Seconds = document.createElement('th');
+            const Milliseconds = document.createElement('th');
+    
+            Hours.innerText = hrsString;
+            Minutes.innerText = minsString;
+            Seconds.innerText = secsString;
+            Milliseconds.innerText = msecString;
+            tr.appendChild(Hours);
+            tr.appendChild(Minutes);
+            tr.appendChild(Seconds);
+            tr.appendChild(Milliseconds);
+            result.appendChild(tr)
+        }
+    });
+
+    function setTimer(){
+        msec++;
+        if(msec === 100){
+            msec = 0;
+            secs++;
+            if(secs === 60){
+                secs = 0;
+                mins++;
+                if(mins === 60){
+                    mins = 0;
+                    hrs++;
+                }
+            }
+        }
+        msecString = msec < 10 ? `0${msec}` : msec;
+        secsString = secs < 10 ? `0${secs}` : secs;
+        minsString = mins < 10 ? `0${mins}` : mins;
+        hrsString = hrs < 10 ? `0${hrs}` : hrs;
+        timerDisplay.innerHTML=`${hrsString}:${minsString}:${secsString}:${msecString} `;
+
+
+    
+    
+    }
+
+</script>
+</body>
+</html>
